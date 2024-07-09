@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modifier contact</title>
+</head>
+
+<body>
+  <%= data %>
+
+  <h3> Modifier vos informations :</h3>
+
+  <form action="/updateContact/<%= data._id %>?_method=PUT" method="post">     
+    <!-- on met _id car c'est comme ça qu'elle s'appelle dans la bdd  -->
+     <!-- on fait appel à la methode override avec ?_method=PUT -->
+      <!-- <input type="hidden" name="_method" value="PUT"> -->  
+      <!-- on met un input type hidden avec la methode et le PUT en valeur pour que la methode envoyée au controleur soit un put et non un post -->
+       <!-- J'ai commenté la ligne car ça fonctionne meme sans l'input type hidden -->
+    <label for="nom">Nom :</label>
+    <input type="text" id="nom" name="nom" value="<%= data.nom %>">
+    <label for="prenom">Prénom :</label>
+    <input type="text" id="prenom" name="prenom" value="<%= data.prenom %>">
+    <label for="email">Adresse mail :</label>
+    <input type="text" id="email" name="email" value="<%= data.email %>">
+    <label for="message">Message :</label>
+    <textarea name="message" id="message"><%= data.message %></textarea>
+    <input type="submit">
+  </form>
+
+  <h3>Supprimer vos données :</h3>
+  <form action="/contact/deleteContact/<%= data._id %>?_method=DELETE"method="post">
+    <input type="submit" value="Supprimer la donnée">
+  </form>
+</body>
+
+</html>
