@@ -11,6 +11,10 @@ var bodyParser = require('body-parser');  // on appelle la dépendance body pars
 app.use(bodyParser.urlencoded({ extended: false })); // on utilise la dépendance body-parser avec l'option extended: false pour que le serveur puisse traiter les informations qui sont encodées en format urlencoded
 
 require('dotenv').config(); // on appelle la dépendance dotenv pour charger les variables d'environnement
+
+var cors = require ('cors'); // on appelle la dépendance cors pour autoriser la récupération des donées 
+app.use(cors()); // on utilise la dépendance cors pour autoriser la récupération des donées // les parentheses vides sont obligatoires pour utiliser les middleware sinon on doit spécifier les autorisations dedans
+
 var mongoose = require('mongoose'); // on appelle la dépendance mongoose
 // const url = "mongodb+srv://codeuseimparfaite:080916@cluster0.kqfvxwi.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0" // on crée une const url et on colle le lien de connexion à la base de données entre les ""
 //j'ai commenté la ligne de l'url pour écrire la nouvelle ligne ci-dessous
@@ -50,7 +54,8 @@ app.post('/nouveauContact', function (req, res) {  // on crée une route sur l'U
 app.get('/', function (req, res) {  // on crée une route sur l'URL 
     Contact.find()                          // on va chercher les données stockés dans la bdd
         .then(data => {     // on afficheles données // on passe en paramètre les données stockées dans la variable data 
-            res.render('Home', { dataHome: data });   // le rendu sera la page home et les données seront affichés dessus   //  on affecte les données à une valeur dataHome      
+            // res.render('Home', { dataHome: data });   // le rendu sera la page home et les données seront affichés dessus   //  on affecte les données à une valeur dataHome  
+            res.json(data); // on renvoie les données sous forme de json // 1ere étape pour lier le backend avec le front : mettre les données à dispo    
         })
         .catch(error => console.log(error));
 });
