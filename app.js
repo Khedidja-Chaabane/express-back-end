@@ -29,6 +29,13 @@ const methodOverride = require('method-override'); // on appelle la dépendance 
 app.use(methodOverride('_method')); // on utilise la dépendance method-override ; des qu'on voit un _method dans l'URL, c'est qu'on utilise la methode override
 
 const bcrypt = require('bcrypt'); // Appel de la dépendance bcrypt
+
+//appel de cookie parser
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
+
+//appel du fichier JWT.js
+const {createToken , validateToken} = require('./JWT');     
 //---------------------------------------------------------------------------------------------------------------
 //form 2eme jour
 
@@ -45,13 +52,13 @@ app.post('/nouveauContact', function (req, res) {  // on crée une route sur l'U
         .then(() => {
             console.log("Contact saved !");  // on affiche "Contact saved !" 
             // res.end();            // on ferme la connexion 
-            res.redirect('/');          // on rederige vers la page d'accueil
+            res.redirect("http://localhost:3000/contacts");          // on rederige vers le front
         })
         .catch(error => console.log(error)); // on affiche l'erreur 
 });
 //READ
 //afficher la liste des contacts
-app.get('/', function (req, res) {  // on crée une route sur l'URL 
+app.get('/',validateToken, function (req, res) {  // on crée une route sur l'URL  // on ajoute validatetoken pour autoriser l'acces uniquement à un user connecté 
     Contact.find()                          // on va chercher les données stockés dans la bdd
         .then(data => {     // on afficheles données // on passe en paramètre les données stockées dans la variable data 
             // res.render('Home', { dataHome: data });   // le rendu sera la page home et les données seront affichés dessus   //  on affecte les données à une valeur dataHome  
@@ -72,7 +79,8 @@ app.get('/contact/:id', function (req, res) {
     Contact.findOne({
         _id: req.params.id             // _id c'est l'id comme elle est marquée dans mongodb // params fait reférence à l'id dans l'url // on fait un matching entre l'id de la donnée et l'id de l'url
     }).then(data => {
-        res.render('EditContact', { data: data });
+        // res.render('EditContact', { data: data });
+        res.json(data); 
     })
         .catch(error => console.log(error));
 });
@@ -92,7 +100,7 @@ app.put('/updateContact/:id', function (req, res) {    // on crée une route sur
         .then(result => {
             console.log(result);
             console.log("contact updated !");
-            res.redirect('/');
+            res.redirect('http://localhost:3000/contacts');
         })
         .catch(error => console.log(error));
 });
@@ -104,7 +112,7 @@ app.delete('/contact/deleteContact/:id', function (req, res) {
         _id: req.params.id
     }).then(() => {
         console.log("contact deleted !");
-        res.redirect('/');
+        res.redirect('http://localhost:3000/co0ntacts');
     }).catch(error => console.log(error));
 });
 
@@ -149,7 +157,8 @@ app.delete('/contact/deleteContact/:id', function (req, res) {
 app.get('/blog', function (req, res) {  // on crée une route sur l'URL 
     Blog.find()                          // on appelle le model Blog et on va chercher les données stockés dans la bdd
         .then(allposts => {     // on afficheles données // on passe en paramètre les données stockées dans la variable allposts 
-            res.render('Blog', { allposts: allposts });   // le rendu sera la page blog et les données seront affichés dessus   //  on affecte les données à une valeur allposts   
+            // res.render('Blog', { allposts: allposts });   // le rendu sera la page blog et les données seront affichés dessus   //  on affecte les données à une valeur allposts 
+            res.json(allposts);  
             console.log("Récupération des données réussie !");
         })
         .catch(error => console.log(error));
@@ -185,7 +194,8 @@ app.get('/post/:id', function (req, res) {
     Blog.findOne({
         _id: req.params.id
     }).then(post => {
-        res.render('EditPost', { post: post });
+        // res.render('EditPost', { post: post });
+        res.json(post);
     })
         .catch(error => console.log(error));
 });
@@ -245,7 +255,8 @@ app.post('/submit-car-form', function (req, res) {
 // route pour afficher toutes les voitures
 app.get('/allCars', function (req, res) {
     Car.find().then(data => {
-        res.render('AllCars', { data: data });
+        // res.render('AllCars', { data: data });
+        res.json(data);
     })
         .catch(error => cosole.log(error));
 })
@@ -322,12 +333,18 @@ app.post('/api/connexion', function (req, res) {
             if (!user) {
                 return res.status(404).send('User not found : Invalid email');
             }
-            //console.log(user);
-            //res.end();
+ 
             if (!bcrypt.compareSync(req.body.password, user.password)) {
                 return res.status(404).send('Password is incorrect : Invalid password');
             }
-            // res.end();
+
+            const accessToken = createToken(user);  // on crée le token aprés avoir verifier si l'utilisateur existe ou pas
+            res.cookie("access-token", accessToken, {   // 
+                maxAge: 1000 *60* 60* 24 * 30  ,  // 30 jours en millisecondes
+                httpOnly: true,          // les cookies seront accessibles uniquement via une requete http 
+            });
+            res.json("LOGGED IN");
+
             if (user.admin == true) {
                 res.redirect('/admin');
             }
@@ -338,6 +355,17 @@ app.post('/api/connexion', function (req, res) {
 
         })
         .catch(error => console.log(error));
+});
+
+//route déconnexion
+app.get('/logout', function(req, res){
+    res.clearCookie("access-token");
+    res.redirect('http://localhost:3000/')
+});
+//
+
+app.get('/getJWT', function(req, res){
+    res.json(req.cookies.accessToken);
 });
 
 app.get('/admin', function (req, res) {
