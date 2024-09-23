@@ -37,13 +37,9 @@ app.use(cookieParser());
 //appel du fichier JWT.js
 const {createToken , validateToken} = require('./JWT');     
 
-<<<<<<< HEAD
 const multer = require('multer');
 app.use(express.static('uploads'));
 app.use(express.static('public'));
-=======
-
->>>>>>> a5cbaff879bb798135fcc80ae3869d4c21f3c7f9
 //---------------------------------------------------------------------------------------------------------------
 //form 2eme jour
 
@@ -60,11 +56,7 @@ app.post('/nouveauContact', function (req, res) {  // on crée une route sur l'U
         .then(() => {
             console.log("Contact saved !");  // on affiche "Contact saved !" 
             // res.end();            // on ferme la connexion 
-<<<<<<< HEAD
             res.redirect("http://localhost:3000/contacts");          // on rederige vers le front
-=======
-            res.redirect(process.env.FRONTEND_LINK +"/contacts");          // on rederige vers le front
->>>>>>> a5cbaff879bb798135fcc80ae3869d4c21f3c7f9
         })
         .catch(error => console.log(error)); // on affiche l'erreur 
 });
@@ -112,11 +104,7 @@ app.put('/updateContact/:id', function (req, res) {    // on crée une route sur
         .then(result => {
             console.log(result);
             console.log("contact updated !");
-<<<<<<< HEAD
             res.redirect('http://localhost:3000/contacts');
-=======
-            res.redirect(process.env.FRONTEND_LINK + '/contacts');
->>>>>>> a5cbaff879bb798135fcc80ae3869d4c21f3c7f9
         })
         .catch(error => console.log(error));
 });
@@ -128,11 +116,7 @@ app.delete('/contact/deleteContact/:id', function (req, res) {
         _id: req.params.id
     }).then(() => {
         console.log("contact deleted !");
-<<<<<<< HEAD
         res.redirect('http://localhost:3000/co0ntacts');
-=======
-        res.redirect(process.env.FRONTEND_LINK + '/contacts');
->>>>>>> a5cbaff879bb798135fcc80ae3869d4c21f3c7f9
     }).catch(error => console.log(error));
 });
 
@@ -380,11 +364,7 @@ app.post('/api/connexion', function (req, res) {
 //route déconnexion
 app.get('/logout', function(req, res){
     res.clearCookie("access-token");
-<<<<<<< HEAD
     res.redirect('http://localhost:3000/')
-=======
-    res.redirect(process.env.FRONTEND_LINK)
->>>>>>> a5cbaff879bb798135fcc80ae3869d4c21f3c7f9
 });
 //
 
