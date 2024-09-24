@@ -39,7 +39,7 @@ const {createToken , validateToken} = require('./JWT');
 
 const multer = require('multer');
 app.use(express.static('uploads'));
-app.use(express.static('public'));
+// app.use(express.static('public'));
 //---------------------------------------------------------------------------------------------------------------
 //form 2eme jour
 
@@ -174,14 +174,15 @@ app.get('/newPost', function (req, res) {
 });
 
 // route action form pour enregistrer un nouveau post
-app.post('/newPost', function (req, res) {  // on crée une route sur l'URL 
+app.post('/newPost',upload.single('image'), function (req, res) {  // on crée une route sur l'URL 
 
     console.log(req.body);
     const Post = new Blog({         // on crée une const Post  et on lui affecte un nouveau Blog - est le nom de mon model"
         titre: req.body.titre,
         auteur: req.body.auteur,   // on fait un matching entre les champs créés dans le model et les champs du formulaire "les name"                   
         description: req.body.description,  // on fait un matching entre les champs créés dans le model et les champs du formulaire "les name"
-        message: req.body.message
+        message: req.body.message,
+        imageName : req.file.filename
     })
     Post.save()  // on enregistre les données dans la bdd 
         .then(() => {
@@ -393,7 +394,7 @@ const storage = multer.diskStorage({
   // Initialisation de multer avec la configuration 'storage'
 const upload = multer({ storage });
 
-// Route pour gérer l'upload des fichiers
+// Route pour Upload image
 app.post('/upload', upload.single('image'), (req, res) => {
   // Vérifie si un fichier a bien été uploadé
   if (!req.file) {
@@ -404,6 +405,19 @@ app.post('/upload', upload.single('image'), (req, res) => {
     res.send('File uploaded successfully.');
   }
 });
+
+// Route pour upload pluieurs images
+app.post('/uploadmultipleimages', upload.array('images', 5), (req, res)=>{
+    
+    if(!req.files || req.files.length === 0){
+        res.status(400).send('No file uploaded !');
+    }
+    else{
+        res.send('File uploaded successfully');
+    }
+})
+
+
 //on met le serveur à la fin et les dépendances au début du code
 var server = app.listen(5000, function () {   // on lance le serveur sur le port 5000
     console.log('server running on port 5000');    //mettre un message dans la console quand le serveur est lancé
