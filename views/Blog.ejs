@@ -38,19 +38,12 @@
   </nav>
 
   <h1 class="text-center text-danger mt-3 mb-3">Bienvenue sur le blog !</h1>
-
-
   <div class="d-flex justify-content-end mb-3 mt-3 p-5">
     <a href="/newPost" class="btn btn-success"><i class="bi bi-plus-square-fill"></i> Créer un nouveau post</a>
   </div>
-
-
   <h2 class="text-info text-center mt-3 mb-3">Tout les posts</h2>
-
   <!-- affichage de tout  mes posts sur le blog sous forme de cards Bootstrap-->
-
   <div class="container mt-3">
-
    <div class="row">
     <% allposts.forEach(post =>{ %>
       <div class="col-md-4">
@@ -65,20 +58,14 @@
            <a href="/post/<%= post._id %>" class="btn btn-warning"><i class="bi bi-pencil-fill"></i> Editer</a>
            <form action="/deletePost/<%= post._id %>?_method=DELETE"method="post" class="d-inline">
             <button type="submit" class="btn btn-danger"><i class="bi bi-trash3-fill"></i> Supprimer</button>
-
            </form>
            </div>
-    
           </div>
         </div>
       </div>
       <% }) %>
    </div>
   </div>
-
-  
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
 </body>
-
 </html>

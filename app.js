@@ -1,9 +1,10 @@
-var express = require('express');  //appel de la dépendance express   // de préférence mettre le nom de la variable le meme nom de la dépendance 
-
-var app = express();  // app comme le nom du fichier // on met la dépendance express dans la variable app
+var express = require('express');  //appel de la dépendance express 
+var app = express();  // app comme le nom du fichier app.js // on met la dépendance express dans la variable app
 
 var Contact = require('./models/Contact'); // on importe le model Contact qui se trouve dans le fichier models/Contact.js
+
 var Blog = require('./models/Blog'); // on importe le model Blog 
+
 var Car = require('./models/Car');
 var User = require('./models/User');
 var bodyParser = require('body-parser');  // on appelle la dépendance body parser
@@ -16,17 +17,24 @@ var cors = require ('cors'); // on appelle la dépendance cors pour autoriser la
 app.use(cors()); // on utilise la dépendance cors pour autoriser la récupération des donées // les parentheses vides sont obligatoires pour utiliser les middleware sinon on doit spécifier les autorisations dedans
 
 var mongoose = require('mongoose'); // on appelle la dépendance mongoose
+
 // const url = "mongodb+srv://codeuseimparfaite:080916@cluster0.kqfvxwi.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0" // on crée une const url et on colle le lien de connexion à la base de données entre les ""
 //j'ai commenté la ligne de l'url pour écrire la nouvelle ligne ci-dessous
+
 const url = process.env.DATABASE_URL; // on récupère la variable d'environnement DATABASE_URL qui se trouve dans le fichier .env
 mongoose.connect(url) // on appelle la fonction connect de mongoose avec l'url de connexion
     .then(console.log("Mongodb connectée !")) // on affiche la connexion à la base de données réussie
     .catch(error => console.log(error)); // on affiche l'erreur si la connexion à la base de données échoue
 
-app.set('view engine', 'ejs'); // on définit le moteur de template à utiliser pour les vues qui est ejs dans le dossier views
+// on définit le moteur de template à utiliser pour les vues
+// qui est ejs dans le dossier views
+app.set('view engine', 'ejs'); 
 
-const methodOverride = require('method-override'); // on appelle la dépendance method-override apres son installation
-app.use(methodOverride('_method')); // on utilise la dépendance method-override ; des qu'on voit un _method dans l'URL, c'est qu'on utilise la methode override
+// on appelle la dépendance method-override apres son installation
+const methodOverride = require('method-override'); 
+// on utilise la dépendance method-override ;
+// des qu'on voit un _method dans l'URL, c'est qu'on utilise la methode override
+app.use(methodOverride('_method'));
 
 const bcrypt = require('bcrypt'); // Appel de la dépendance bcrypt
 
@@ -158,11 +166,17 @@ app.delete('/contact/deleteContact/:id', function (req, res) {
 //EXERCICE CREUD / MY BLOG
 
 //création de la route blog ou tout mes posts seront affichés
-app.get('/blog', function (req, res) {  // on crée une route sur l'URL 
-    Blog.find()                          // on appelle le model Blog et on va chercher les données stockés dans la bdd
-        .then(allposts => {     // on afficheles données // on passe en paramètre les données stockées dans la variable allposts 
-            // res.render('Blog', { allposts: allposts });   // le rendu sera la page blog et les données seront affichés dessus   //  on affecte les données à une valeur allposts 
-            res.json(allposts);  
+// on crée une route sur l'URL
+app.get('/blog', function (req, res) { 
+// on appelle le model Blog et on va chercher les données stockés dans la bdd  
+    Blog.find() 
+// on afficheles données  
+// on passe en paramètre les données stockées dans la variable allposts                        
+        .then(allposts => {
+// le rendu sera la page blog et les données seront affichés dessus
+//  on affecte les données à une valeur allposts 
+res.render('Blog', { allposts: allposts });
+           // res.json(allposts); // format json 
             console.log("Récupération des données réussie !");
         })
         .catch(error => console.log(error));
@@ -173,21 +187,21 @@ app.get('/newPost', function (req, res) {
     res.render('newPost');
 });
 
-// route action form pour enregistrer un nouveau post
-app.post('/newPost',upload.single('image'), function (req, res) {  // on crée une route sur l'URL 
+//Route action du formulaire pour enregistrer un nouveau post
+app.post('/newPost', function (req, res) {  // on crée une route sur l'URL 
 
     console.log(req.body);
-    const Post = new Blog({         // on crée une const Post  et on lui affecte un nouveau Blog - est le nom de mon model"
+    const Post = new Blog({ // on crée une const Post  et on lui affecte un nouveau Blog -le nom de mon model"
+        // on fait un matching entre les champs créés dans le model et les champs du formulaire 
         titre: req.body.titre,
-        auteur: req.body.auteur,   // on fait un matching entre les champs créés dans le model et les champs du formulaire "les name"                   
-        description: req.body.description,  // on fait un matching entre les champs créés dans le model et les champs du formulaire "les name"
-        message: req.body.message,
-        imageName : req.file.filename
+        auteur: req.body.auteur,                      
+        description: req.body.description,  
+        message: req.body.message
     })
     Post.save()  // on enregistre les données dans la bdd 
         .then(() => {
             console.log("Post saved !");
-            res.redirect('/blog');          // on rederige vers la page blog
+            res.redirect('/blog'); // on rederige vers la page blog
         })
         .catch(error => console.log(error)); // on affiche l'erreur 
 });
@@ -199,35 +213,38 @@ app.get('/post/:id', function (req, res) {
     Blog.findOne({
         _id: req.params.id
     }).then(post => {
-        // res.render('EditPost', { post: post });
-        res.json(post);
+        //Affichage du post dans la vue
+        res.render('EditPost', { post: post });
+        //Affichage sous format json
+        //res.json(post);
     })
         .catch(error => console.log(error));
 });
 
 
-//route action form update post
+//Route action du formulaire de modification
 app.put('/updatePost/:id', function (req, res) {
     const Post = {
+ // on fait un matching entre les champs créés dans le model et les champs du formulaire "les name" 
         titre: req.body.titre,
-        auteur: req.body.auteur,   // on fait un matching entre les champs créés dans le model et les champs du formulaire "les name"                   
-        description: req.body.description,  // on fait un matching entre les champs créés dans le model et les champs du formulaire "les name"
+        auteur: req.body.auteur,                     
+        description: req.body.description,  
         message: req.body.message
     }
-    //matching data: on fait un matching entre les id des données dans la bdd et celles presentes dans l'url
+//matching data: on fait un matching entre les id des données dans la bdd et celles presentes dans l'url
     Blog.updateOne({
-        _id: req.params.id           // on récupère l'id de la donnée
-    }, { $set: Post })                  // avec $set on met à jour les données
-        .then(result => {
-            console.log(result);
+        _id: req.params.id   // on récupère l'id de la donnée
+    }, { $set: Post })      // avec $set on met à jour les données
+        .then(post => {
+        //Afficher un message dans la console
             console.log("Post updated !");
-            res.redirect('/blog');
+            res.redirect('/blog'); //redirection
         })
         .catch(error => console.log(error));
 });
 
 //Supprimer un post
-app.get('/deletePost/:id', function (req, res) {
+app.delete('/deletePost/:id', function (req, res) {
     Blog.findOneAndDelete({
         _id: req.params.id
     }).then(() => {
@@ -419,7 +436,8 @@ app.post('/uploadmultipleimages', upload.array('images', 5), (req, res)=>{
 
 
 //on met le serveur à la fin et les dépendances au début du code
+
 var server = app.listen(5000, function () {   // on lance le serveur sur le port 5000
-    console.log('server running on port 5000');    //mettre un message dans la console quand le serveur est lancé
+    console.log('server running on port 5000');   //mettre un message dans la console quand le serveur est lancé
 
 });

@@ -4,8 +4,7 @@ const blogShema = mongoose.Schema({ // on crée un schéma pour la collection bl
 titre : {type: String} ,  
 auteur: { type: String} , 
 description : { type: String}  , 
-message : { type: String},
-imageName : {type : String},
+message : { type: String}
 })
 
 module.exports = mongoose.model('blog' , blogShema); // on exporte le schéma blog pour pouvoir l'utiliser 

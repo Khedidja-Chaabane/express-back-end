@@ -9,29 +9,48 @@
 </head>
 <body>
 
-    <h2 class="text-center mt-3 mb-3 text-danger">Modifiez le post</h2>
-    <div class="d-flex justify-content-end mb-3 mt-3 p-5">
+    <h2 class="text-center mt-3 text-danger">Modifier le post</h2>
+    <div class="d-flex justify-content-end ">
       <a href="/blog" class="btn btn-outline-secondary">
           <i class="bi bi-arrow-left-square-fill"></i> Retour
       </a>
   </div>
-    <div class="container mt-5">
-      <form action="/updatePost/<%= result._id %>?_method=PUT" method="post">
-        <label for="titre">Titre :</label>
-        <input type="text" id="titre" name="titre" value="<%= result.titre %>">
-        <label for="auteur">Auteur :</label>
-        <input type="text" id="auteur" name="auteur" value="<%= result.auteur %>">
-        <label for="description">Description :</label>
-        <input type="text" id="description" name="description" value="<%= result.description %>">
-        <label for="message">Conteneu :</label>
-        <textarea name="message" id="message"><%= result.message %></textarea>
-        <input type="submit">
-    </form>
+    <div class="container">
+      <div class="container m-auto">
+        <form action="/updatePost/<%= post._id %>?_method=PUT" method="post">
+            <div class="mb-3">
+                <label for="titre" class="form-label">Titre : </label>
+                <input type="text" class="form-control" id="titre" name="titre"  value="<%= post.titre %>">
+            </div>
+            <div class="mb-3">
+                <label for="auteur" class="form-label">Auteur : </label>
+                <input type="text" class="form-control" id="auteur" name="auteur" value="<%= post.auteur %>">
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description : </label>
+                <input type="text" class="form-control" id="description" name="description" value="<%= post.description %>">
+            </div>
+            <div class="mb-3">
+                <label for="message">Contenu : </label>
+                <textarea name="message" class="form-control" placeholder="Rédigez votre article !
+                 " id="message"  style="height: 100px"><%= post.message %></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Mettre à jour</button>
+        </form>
+        
+    </div>
     </div>
 
-    <h3>Supprimer ce post :</h3>
-  <form action="/deletePost/<%= post._id %>?_method=DELETE"method="post">
-    <input type="submit" value="Supprimer">
-  </form>
+   <div class="container">
+    <h3 class="text-center text-danger">Supprimer ce post :</h3>
+    <div class="text-center">
+      <form action="/deletePost/<%= post._id %>?_method=DELETE" method="post">
+        <input type="submit" value="Supprimer" class="btn btn-danger">
+      </form>
+    </div>
+   </div>
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"></script>
 </body>
 </html>
