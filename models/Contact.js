@@ -1,10 +1,9 @@
-const mongoose = require('mongoose'); // on appelle la dépendance mongoose
-
-const contactShema = mongoose.Schema({ // on crée un schéma pour la collection contact
-nom : {type: String} ,  // on crée un champ nom de type String , on peut aussi l'écrire comme ça : type : "string"
+const mongoose = require('mongoose'); // appel à la dépendance mongoose
+const contactShema = mongoose.Schema({ // création du schéma pour la collection contact
+nom : {type: String} ,  // créations des champs et leurs types 
 prenom : { type: String}  , 
 email : { type: String} ,
 message : { type: String}
 })
-
-module.exports = mongoose.model('contact' , contactShema); // on exporte le schéma contact pour pouvoir l'utiliser dans le fichier
+// exporter le schéma  pour pouvoir l'utiliser 
+module.exports = mongoose.model('contact' , contactShema); 

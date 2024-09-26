@@ -1,49 +1,27 @@
-var express = require('express');  //appel de la dépendance express 
-var app = express();  // app comme le nom du fichier app.js // on met la dépendance express dans la variable app
-
-var Contact = require('./models/Contact'); // on importe le model Contact qui se trouve dans le fichier models/Contact.js
-
-var Blog = require('./models/Blog'); // on importe le model Blog 
-
-var Car = require('./models/Car');
+var express = require('express');                                                          //appel de la dépendance express 
+var app = express();                                                         // app comme le nom du fichier app.js // on met la dépendance express dans la variable app
 var User = require('./models/User');
-var bodyParser = require('body-parser');  // on appelle la dépendance body parser
-
-app.use(bodyParser.urlencoded({ extended: false })); // on utilise la dépendance body-parser avec l'option extended: false pour que le serveur puisse traiter les informations qui sont encodées en format urlencoded
-
-require('dotenv').config(); // on appelle la dépendance dotenv pour charger les variables d'environnement
-
-var cors = require ('cors'); // on appelle la dépendance cors pour autoriser la récupération des donées 
-app.use(cors()); // on utilise la dépendance cors pour autoriser la récupération des donées // les parentheses vides sont obligatoires pour utiliser les middleware sinon on doit spécifier les autorisations dedans
-
-var mongoose = require('mongoose'); // on appelle la dépendance mongoose
-
-// const url = "mongodb+srv://codeuseimparfaite:080916@cluster0.kqfvxwi.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0" // on crée une const url et on colle le lien de connexion à la base de données entre les ""
-//j'ai commenté la ligne de l'url pour écrire la nouvelle ligne ci-dessous
-
-const url = process.env.DATABASE_URL; // on récupère la variable d'environnement DATABASE_URL qui se trouve dans le fichier .env
-mongoose.connect(url) // on appelle la fonction connect de mongoose avec l'url de connexion
-    .then(console.log("Mongodb connectée !")) // on affiche la connexion à la base de données réussie
-    .catch(error => console.log(error)); // on affiche l'erreur si la connexion à la base de données échoue
-
-// on définit le moteur de template à utiliser pour les vues
-// qui est ejs dans le dossier views
-app.set('view engine', 'ejs'); 
-
-// on appelle la dépendance method-override apres son installation
-const methodOverride = require('method-override'); 
-// on utilise la dépendance method-override ;
-// des qu'on voit un _method dans l'URL, c'est qu'on utilise la methode override
-app.use(methodOverride('_method'));
-
-const bcrypt = require('bcrypt'); // Appel de la dépendance bcrypt
-
-//appel de cookie parser
-const cookieParser = require('cookie-parser');
+var Car = require('./models/Car');
+var Contact = require('./models/Contact');                                     // on importe le model Contact qui se trouve dans le fichier models/Contact.js
+var bodyParser = require('body-parser');                                                // on appelle la dépendance body parser
+app.use(bodyParser.urlencoded({ extended: false }));                                 // on utilise la dépendance body-parser avec l'option extended: false pour que le serveur puisse traiter les informations qui sont encodées en format urlencoded
+require('dotenv').config();                                                           // on appelle la dépendance dotenv pour charger les variables d'environnement
+var cors = require ('cors');                                                              // on appelle la dépendance cors pour autoriser la récupération des données
+app.use(cors());                                                                          // on utilise la dépendance cors pour autoriser la récupération des donées // les parentheses vides sont obligatoires pour utiliser les middleware sinon on doit spécifier les autorisations dedans
+var mongoose = require('mongoose');                                                        // on appelle la dépendance mongoose
+const url = process.env.DATABASE_URL;                                                     // on récupère la variable d'environnement DATABASE_URL qui se trouve dans le fichier .env
+mongoose.connect(url)                                                                     // on appelle la fonction connect de mongoose avec l'url de connexion
+    .then(console.log("Mongodb connectée !"))                                              // on affiche la connexion à la base de données réussie
+    .catch(error => console.log(error));                                                   // on affiche l'erreur si la connexion à la base de données échoue
+const methodOverride = require('method-override');                                           // on appelle la dépendance method-override apres son installation
+app.use(methodOverride('_method'));                                                              // on utilise la dépendance method-override ;des qu'on voit un _method dans l'URL, c'est qu'on utilise la methode override
+const bcrypt = require('bcrypt');                                                                      // Appel de la dépendance bcrypt
+const cookieParser = require('cookie-parser');                                                         //appel de cookie parser
 app.use(cookieParser());
+const {createToken , validateToken} = require('./JWT');                                               //appel du fichier JWT.js  
 
-//appel du fichier JWT.js
-const {createToken , validateToken} = require('./JWT');     
+var Blog = require('./models/Blog'); // on importe le model Blog
+app.set('view engine', 'ejs');                                                                  // on définit le moteur de template à utiliser pour les vues qui est ejs dans le dossier views
 
 const multer = require('multer');
 app.use(express.static('uploads'));
@@ -326,7 +304,6 @@ app.get('/inscription', function (req, res) {
 });
 
 //route de l'action du formulaire d'inscription
-//  /api avec post
 app.post('/api/newuser', function (req, res) {
     var Data = new User({
         username: req.body.username,
@@ -336,7 +313,7 @@ app.post('/api/newuser', function (req, res) {
     })
     Data.save().then(() => {
         console.log('User saved!');
-        res.redirect('/login');
+        res.redirect('http://localhost:3000/connexion');
     })
         .catch((error) => console.log(error));
 });
@@ -346,7 +323,7 @@ app.get('/login', function (req, res) {
     res.render('Connexion');
 })
 
-//route de l'action du formulaire de connexion "l'authentification"
+//CONNEXION
 app.post('/api/connexion', function (req, res) {
     User.findOne({
         email: req.body.email
@@ -365,19 +342,30 @@ app.post('/api/connexion', function (req, res) {
                 maxAge: 1000 *60* 60* 24 * 30  ,  // 30 jours en millisecondes
                 httpOnly: true,          // les cookies seront accessibles uniquement via une requete http 
             });
-            res.json("LOGGED IN");
 
             if (user.admin == true) {
-                res.redirect('/admin');
+                return res.redirect('http://localhost:3000/admin');
             }
 
             else {
-                res.render('Profil', { user: user }); // user: c'est la data qui va etre affichée dans la vue Profil.ejs et user c'est l'objet user qui contient les données de l'utilisateur
+                return res.redirect(`http://localhost:3000/profile/${user._id}`);
             }
 
         })
         .catch(error => console.log(error));
 });
+
+//Profile
+app.get('/user/:id', function (req, res) {
+    User.findOne({
+// on fait un matching entre l'id de la donnée et l'id de l'url
+        _id: req.params.id        
+    }).then(data => {
+        res.json(data); 
+    })
+        .catch(error => console.log(error));
+});
+
 
 //route déconnexion
 app.get('/logout', function(req, res){
@@ -437,7 +425,9 @@ app.post('/uploadmultipleimages', upload.array('images', 5), (req, res)=>{
 
 //on met le serveur à la fin et les dépendances au début du code
 
-var server = app.listen(5000, function () {   // on lance le serveur sur le port 5000
-    console.log('server running on port 5000');   //mettre un message dans la console quand le serveur est lancé
+// on lance le serveur sur le port 5000
+var server = app.listen(5000, function () {  
+//mettre un message dans la console quand le serveur est lancé 
+    console.log('server running on port 5000');   
 
 });
