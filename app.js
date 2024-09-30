@@ -252,6 +252,7 @@ app.post('/submit-car-form', function (req, res) {
         })
         .catch((error) => error);
 });
+
 // route pour afficher toutes les voitures
 app.get('/allCars', function (req, res) {
     Car.find().then(data => {
