@@ -25,6 +25,45 @@ app.set('view engine', 'ejs');                                                  
 
 const multer = require('multer');
 app.use(express.static('uploads'));
+// Configuration de multer pour définir où et comment les fichiers uploadés seront stockés
+const storage = multer.diskStorage({
+    // Définit le dossier de destination des fichiers uploadés
+    destination: (req, file, cb) => {
+      cb(null, 'uploads/'); // Les fichiers seront stockés dans le dossier 'uploads'
+    },
+    // Définit le nom du fichier uploadé
+    filename: (req, file, cb) => {
+      cb(null, file.originalname); // Le nom du fichier sera conservé tel qu'il a été uploadé (original)
+    }
+  });
+  // Initialisation de multer avec la configuration 'storage'
+const upload = multer({ storage });
+
+// Route pour Upload image
+app.post('/upload', upload.single('image'), (req, res) => {
+  // Vérifie si un fichier a bien été uploadé
+  if (!req.file) {
+    // Si aucun fichier n'est trouvé, retourne une réponse d'erreur
+    res.status(400).send('No file uploaded.');
+  } else {
+    // Si un fichier est trouvé, retourne un message de succès
+    res.send('File uploaded successfully.');
+  }
+});
+
+// Route pour upload pluieurs images
+app.post('/uploadmultipleimages', upload.array('images', 5), (req, res)=>{
+    
+    if(!req.files || req.files.length === 0){
+        res.status(400).send('No file uploaded !');
+    }
+    else{
+        res.send('File uploaded successfully');
+    }
+})
+
+
+
 // app.use(express.static('public'));
 //---------------------------------------------------------------------------------------------------------------
 //form 2eme jour
@@ -153,8 +192,8 @@ app.get('/blog', function (req, res) {
         .then(allposts => {
 // le rendu sera la page blog et les données seront affichés dessus
 //  on affecte les données à une valeur allposts 
-res.render('Blog', { allposts: allposts });
-           // res.json(allposts); // format json 
+//res.render('Blog', { allposts: allposts });
+           res.json(allposts); // format json 
             console.log("Récupération des données réussie !");
         })
         .catch(error => console.log(error));
@@ -166,7 +205,7 @@ app.get('/newPost', function (req, res) {
 });
 
 //Route action du formulaire pour enregistrer un nouveau post
-app.post('/newPost', function (req, res) {  // on crée une route sur l'URL 
+app.post('/newPost', upload.single('image'), function (req, res) {  // on crée une route sur l'URL 
 
     console.log(req.body);
     const Post = new Blog({ // on crée une const Post  et on lui affecte un nouveau Blog -le nom de mon model"
@@ -174,12 +213,13 @@ app.post('/newPost', function (req, res) {  // on crée une route sur l'URL
         titre: req.body.titre,
         auteur: req.body.auteur,                      
         description: req.body.description,  
-        message: req.body.message
+        message: req.body.message,
+        imageName : req.file.filename
     })
     Post.save()  // on enregistre les données dans la bdd 
         .then(() => {
             console.log("Post saved !");
-            res.redirect('/blog'); // on rederige vers la page blog
+            res.send('Post saved !'); // on rederige vers la page blog
         })
         .catch(error => console.log(error)); // on affiche l'erreur 
 });
@@ -386,42 +426,7 @@ app.get('/admin', function (req, res) {
         .catch(error => console.log(error));
 });
 
-// Configuration de multer pour définir où et comment les fichiers uploadés seront stockés
-const storage = multer.diskStorage({
-    // Définit le dossier de destination des fichiers uploadés
-    destination: (req, file, cb) => {
-      cb(null, 'uploads/'); // Les fichiers seront stockés dans le dossier 'uploads'
-    },
-    // Définit le nom du fichier uploadé
-    filename: (req, file, cb) => {
-      cb(null, file.originalname); // Le nom du fichier sera conservé tel qu'il a été uploadé (original)
-    }
-  });
-  // Initialisation de multer avec la configuration 'storage'
-const upload = multer({ storage });
 
-// Route pour Upload image
-app.post('/upload', upload.single('image'), (req, res) => {
-  // Vérifie si un fichier a bien été uploadé
-  if (!req.file) {
-    // Si aucun fichier n'est trouvé, retourne une réponse d'erreur
-    res.status(400).send('No file uploaded.');
-  } else {
-    // Si un fichier est trouvé, retourne un message de succès
-    res.send('File uploaded successfully.');
-  }
-});
-
-// Route pour upload pluieurs images
-app.post('/uploadmultipleimages', upload.array('images', 5), (req, res)=>{
-    
-    if(!req.files || req.files.length === 0){
-        res.status(400).send('No file uploaded !');
-    }
-    else{
-        res.send('File uploaded successfully');
-    }
-})
 
 
 //on met le serveur à la fin et les dépendances au début du code
