@@ -1,5 +1,30 @@
 var express = require('express');                                                          //appel de la dépendance express 
 var app = express();                                                         // app comme le nom du fichier app.js // on met la dépendance express dans la variable app
+//Sécurité
+// si le serveur est surchargé
+// on appelle toobusy aprés l'avoir installé avec npm i toobusy-js
+const toobusy = require('toobusy-js');
+app.use(function(req, res, next){
+    if(toobusy()){
+        res.status(503).send('Server too busy');
+    }else{
+        next();
+    }
+})
+
+// // appel de hpp apres l'avoir installé avec npm i hpp
+// // hpp rencforce la sécurité de l'app en limitant les pollutions des requetes http
+const hpp = require('hpp');
+app.use(hpp());
+
+// //appel de helmet apres l'avoir installé avec npm i helmet
+// //contre la modification des entetes
+const helmet = require('helmet');
+app.use(helmet());
+ 
+// appel de nocache apres l'avoir installé avec npm i nocache
+const nocache = require('nocache');
+app.use(nocache());
 var User = require('./models/User');
 var Car = require('./models/Car');
 var Contact = require('./models/Contact');                                     // on importe le model Contact qui se trouve dans le fichier models/Contact.js
@@ -75,6 +100,7 @@ app.post('/nouveauContact', function (req, res) {  // on crée une route sur l'U
         nom: req.body.nom,
         prenom: req.body.prenom,  // on fait un matching entre les champs créés dans le model et les champs du formulaire "les name"
         email: req.body.email,
+        date_contact: req.body.date_contact,
         message: req.body.message
     })
     Data.save()  // on enregistre les données dans la bdd 
@@ -87,7 +113,7 @@ app.post('/nouveauContact', function (req, res) {  // on crée une route sur l'U
 });
 //READ
 //afficher la liste des contacts
-app.get('/',validateToken, function (req, res) {  // on crée une route sur l'URL  // on ajoute validatetoken pour autoriser l'acces uniquement à un user connecté 
+app.get('/', function (req, res) {  // on crée une route sur l'URL  // on ajoute validatetoken pour autoriser l'acces uniquement à un user connecté 
     Contact.find()                          // on va chercher les données stockés dans la bdd
         .then(data => {     // on afficheles données // on passe en paramètre les données stockées dans la variable data 
             // res.render('Home', { dataHome: data });   // le rendu sera la page home et les données seront affichés dessus   //  on affecte les données à une valeur dataHome  
@@ -350,7 +376,8 @@ app.post('/api/newuser', function (req, res) {
         username: req.body.username,
         email: req.body.email,
         password: bcrypt.hashSync(req.body.password, 10),
-        admin: false
+        admin: false ,
+        date_inscription : req.body.date_inscription ,
     })
     Data.save().then(() => {
         console.log('User saved!');

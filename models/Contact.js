@@ -3,7 +3,8 @@ const contactShema = mongoose.Schema({ // création du schéma pour la collectio
 nom : {type: String} ,  // créations des champs et leurs types 
 prenom : { type: String}  , 
 email : { type: String} ,
-message : { type: String}
+message : { type: String},
+date_contact : {type: Date}
 })
 // exporter le schéma  pour pouvoir l'utiliser 
 module.exports = mongoose.model('contact' , contactShema); 
