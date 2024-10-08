@@ -1,0 +1,582 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Express backend",
+    "description": "My documentation",
+    "version": "1.0"
+  },
+  "host": "localhost:5000",
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/upload": {
+      "post": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/uploadmultipleimages": {
+      "post": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/nouveauContact": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nom": {
+                  "example": "any"
+                },
+                "prenom": {
+                  "example": "any"
+                },
+                "email": {
+                  "example": "any"
+                },
+                "date_contact": {
+                  "example": "any"
+                },
+                "message": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      },
+      "get": {
+        "description": "",
+        "responses": {
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/contact/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/updateContact/{id}": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nom": {
+                  "example": "any"
+                },
+                "prenom": {
+                  "example": "any"
+                },
+                "email": {
+                  "example": "any"
+                },
+                "message": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/contact/deleteContact/{id}": {
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/blog": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/newPost": {
+      "get": {
+        "description": "",
+        "responses": {
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "titre": {
+                  "example": "any"
+                },
+                "auteur": {
+                  "example": "any"
+                },
+                "description": {
+                  "example": "any"
+                },
+                "message": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/post/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/updatePost/{id}": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "titre": {
+                  "example": "any"
+                },
+                "auteur": {
+                  "example": "any"
+                },
+                "description": {
+                  "example": "any"
+                },
+                "message": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/deletePost/{id}": {
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/newCarForm": {
+      "get": {
+        "description": "",
+        "responses": {
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/submit-car-form": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "marque": {
+                  "example": "any"
+                },
+                "modele": {
+                  "example": "any"
+                },
+                "description": {
+                  "example": "any"
+                },
+                "image": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/allCars": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/editCarForm/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/edit-car-form/{id}": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "marque": {
+                  "example": "any"
+                },
+                "modele": {
+                  "example": "any"
+                },
+                "description": {
+                  "example": "any"
+                },
+                "image": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/deleteCar/{id}": {
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/inscription": {
+      "get": {
+        "description": "",
+        "responses": {
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/api/newuser": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "example": "any"
+                },
+                "email": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                },
+                "date_inscription": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/login": {
+      "get": {
+        "description": "",
+        "responses": {
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/api/connexion": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/user/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/logout": {
+      "get": {
+        "description": "",
+        "responses": {
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/getJWT": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/admin": {
+      "get": {
+        "description": "",
+        "responses": {
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    }
+  }
+}

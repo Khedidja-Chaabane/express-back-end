@@ -25,6 +25,12 @@ app.use(helmet());
 // appel de nocache apres l'avoir installé avec npm i nocache
 const nocache = require('nocache');
 app.use(nocache());
+
+// documentation swagger
+const swaggerUI = require ('swagger-ui-express');
+const swaggerDocs = require ('./swagger-output.json');
+app.use('/api-docs' ,swaggerUI.serve , swaggerUI.setup(swaggerDocs) );
+
 var User = require('./models/User');
 var Car = require('./models/Car');
 var Contact = require('./models/Contact');                                     // on importe le model Contact qui se trouve dans le fichier models/Contact.js
